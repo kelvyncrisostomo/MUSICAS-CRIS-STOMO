@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#232332">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg">
+<title>WinMobile</title>
+<style>
+:root{--bg:#232332;--pn:#2e2e44;--fg:#00e000;--hi:#e8e8c0;--bd:#6a6a90}
+body[data-t=blue]{--bg:#1a2433;--pn:#243650;--fg:#4fc3ff;--hi:#cfe8ff;--bd:#4a6a98}
+body[data-t=amber]{--bg:#2a1f10;--pn:#43301a;--fg:#ffb000;--hi:#ffe0a0;--bd:#9a7a38}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#0c0c12;color:var(--hi);font:12px/1.3 "Lucida Console",Consolas,monospace;user-select:none}
+body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.win{background:var(--pn);border:2px outset var(--bd);margin:6px auto;max-width:440px}
+.tb{background:linear-gradient(90deg,var(--bd),var(--bg));padding:3px 6px;display:flex;justify-content:space-between;font-weight:bold;letter-spacing:2px;font-size:11px}
+.tb button{background:none;border:0;color:var(--hi);font:inherit;padding:0 4px}
+.top{display:flex;gap:6px;padding:6px}
+.lcd{background:#000;border:2px inset var(--bd);color:var(--fg);width:46%;padding:3px}
+.tr{display:flex;align-items:center;gap:6px}
+#time{font:bold 30px monospace;cursor:pointer}
+#vis{width:100%;height:42px;display:block;image-rendering:pixelated;cursor:pointer}
+.inf{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.mq{overflow:hidden;white-space:nowrap;background:#000;border:2px inset var(--bd);color:var(--fg);padding:3px}
+.mq span{display:inline-block}.sc{animation:sc 12s linear infinite;padding-left:100%}
+@keyframes sc{to{transform:translateX(-100%)}}
+#tech{background:#000;border:2px inset var(--bd);color:var(--fg);padding:3px;font-size:10px}
+.pad{padding:0 6px 6px}
+input[type=range]{width:100%;accent-color:var(--fg);margin:4px 0}
+.row2{display:flex;gap:6px;align-items:center}.row2 label{font-size:10px;white-space:nowrap}
+.bt{display:flex;gap:4px;margin:4px 0}
+.b{flex:1;background:linear-gradient(#6a6a8a,#34344c);border:2px outset var(--bd);color:var(--hi);padding:9px 0;font:bold 15px monospace}
+.b:active,.b.on{border-style:inset;color:var(--fg)}
+.b.s{font-size:10px;padding:7px 2px}
+select{background:#000;color:var(--fg);border:1px solid var(--bd);font:11px monospace;padding:4px;max-width:100%}
+.eq{display:flex;justify-content:space-around;padding:6px 2px;background:#000;margin:6px;border:2px inset var(--bd)}
+.eq div{display:flex;flex-direction:column;align-items:center;font-size:9px;color:var(--fg)}
+.eq input{writing-mode:vertical-lr;direction:rtl;height:100px;width:22px;margin:2px 0}
+#pl{max-height:46vh;overflow:auto;background:#000;margin:6px;border:2px inset var(--bd)}
+.row{display:flex;gap:4px;padding:7px 4px;color:var(--fg);border-bottom:1px solid #1a1a1a;align-items:center}
+.row.cur{background:#1d2d6a;color:#fff}.row .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .a button{background:none;border:0;color:var(--hi);padding:2px 5px;font-size:12px}
+#q{width:calc(100% - 12px);margin:0 6px;background:#000;color:var(--fg);border:2px inset var(--bd);padding:6px;font:12px monospace}
+.hide{display:none}
+</style></head><body>
+
+<div class="win"><div class="tb"><span>WINMOBILE</span><button data-k="theme">◐ TEMA</button></div>
+ <div class="top">
+  <div class="lcd"><div class="tr"><span id="st">■</span><span id="time">00:00</span></div><canvas id="vis" width="152" height="42"></canvas></div>
+  <div class="inf"><div class="mq" id="mq"><span id="tt">WinMobile — abra suas músicas ⏏</span></div><div id="tech">--- kbps --- kHz</div>
+   <div class="row2"><label>VEL</label><select id="sp"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option><option>2</option></select>
+   <label>SONO</label><select id="sl"><option value="0">off</option><option>15</option><option>30</option><option>60</option><option>90</option></select></div></div>
+ </div>
+ <div class="pad">
+  <input type="range" id="seek" min="0" max="1000" value="0">
+  <div class="row2"><label>VOL</label><input type="range" id="vol" min="0" max="1" step="0.01" value="0.8"><label>BAL</label><input type="range" id="bal" min="-100" max="100" value="0"></div>
+  <div class="bt"><button class="b" data-k="prev">⏮</button><button class="b" data-k="play">▶</button><button class="b" data-k="pause">⏸</button><button class="b" data-k="stop">⏹</button><button class="b" data-k="next">⏭</button><button class="b" data-k="open">⏏</button></div>
+  <div class="bt"><button class="b s" id="bsh" data-k="shuf">ALEATÓRIO</button><button class="b s" id="brp" data-k="rep">REPETIR</button><button class="b s" id="beq" data-k="eq">EQ</button><button class="b s on" id="bpl" data-k="plw">LISTA</button></div>
+ </div>
+</div>
+
+<div class="win hide" id="eqw"><div class="tb"><span>EQUALIZADOR</span><button data-k="eqon" id="beo">ON</button></div>
+ <div class="row2" style="padding:6px 6px 0"><select id="pr" style="flex:1"></select><label>PRE</label><input type="range" id="pre" min="-12" max="12" value="0" style="width:90px"></div>
+ <div class="eq" id="eqs"></div></div>
+
+<div class="win" id="plw"><div class="tb"><span>LISTA <span id="cnt"></span></span><span><button data-k="addf">+ARQ</button><button data-k="addd">+PASTA</button><button data-k="sort">A-Z</button><button data-k="rnd">MIX</button><button data-k="clr">LIMPAR</button></span></div>
+ <input id="q" placeholder="🔎 buscar...">
+ <div id="pl"></div></div>
+
+<input type="file" id="f" accept="audio/*" multiple hidden><input type="file" id="d" webkitdirectory multiple hidden>
+
+<script>
+const $=i=>document.getElementById(i),A=new Audio(),F=[60,170,310,600,1000,3000,6000,12000,14000,16000];
+const P={Flat:[0,0,0,0,0,0,0,0,0,0],Rock:[5,3,-3,-5,-2,2,5,6,6,6],Pop:[-2,2,5,6,4,-1,-2,-2,-2,-2],Jazz:[4,3,1,2,-2,-2,0,1,3,4],Clássico:[0,0,0,0,0,0,-4,-4,-4,-6],Graves:[8,6,4,2,0,0,0,0,0,0],Agudos:[0,0,0,0,0,1,3,5,7,8],Vocal:[-3,-2,0,3,5,5,3,1,0,-1],Dance:[6,4,2,0,0,-3,-4,-4,0,0]};
+let ctx,pre,bands=[],pan,an,list=[],cur=-1,url,hist=[],shuf=0,rep=0,remain=0,eqOn=1,vm=0,sT,S={};
+try{S=JSON.parse(localStorage.wp||'{}')}catch(e){}
+const clean=n=>n.replace(/\.[^.]+$/,'').replace(/_/g,' ');
+const fmt=s=>{s=Math.max(0,s|0);return String(s/60|0).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+function save(){try{localStorage.wp=JSON.stringify({v:A.volume,b:$('bal').value,eq:F.map((_,i)=>+$('e'+i).value),pre:$('pre').value,eqOn,sh:shuf,rp:rep,t:document.body.dataset.t||'',sp:$('sp').value})}catch(e){}}
+
+/* ---- armazenamento (IndexedDB) ---- */
+const DB=new Promise((ok,no)=>{const r=indexedDB.open('wm',1);r.onupgradeneeded=()=>{r.result.createObjectStore('t',{keyPath:'id'});r.result.createObjectStore('m')};r.onsuccess=()=>ok(r.result);r.onerror=no});
+const tx=(s,m,f)=>DB.then(d=>new Promise((ok,no)=>{const t=d.transaction(s,m),o=f(t.objectStore(s));t.oncomplete=()=>ok(o&&o.result);t.onerror=no})).catch(()=>{});
+const saveOrder=()=>tx('m','readwrite',s=>s.put(list.map(x=>x.id),'order'));
+
+/* ---- áudio: fonte → pré → 10 bandas → balanço → analisador ---- */
+function initAudio(){if(ctx)return;ctx=new(window.AudioContext||window.webkitAudioContext)();const s=ctx.createMediaElementSource(A);pre=ctx.createGain();
+ bands=F.map((f,i)=>{const b=ctx.createBiquadFilter();b.type=i==0?'lowshelf':i==9?'highshelf':'peaking';b.frequency.value=f;b.Q.value=1.1;return b});
+ pan=ctx.createStereoPanner?ctx.createStereoPanner():null;an=ctx.createAnalyser();an.fftSize=512;an.smoothingTimeConstant=.8;
+ let n=s;[pre,...bands,pan,an].filter(Boolean).forEach(x=>{n.connect(x);n=x});n.connect(ctx.destination);applyEq()}
+function applyEq(){if(!ctx)return;bands.forEach((b,i)=>b.gain.value=eqOn?+$('e'+i).value:0);pre.gain.value=eqOn?Math.pow(10,$('pre').value/20):1;if(pan)pan.pan.value=$('bal').value/100}
+
+/* ---- reprodução ---- */
+async function play(i,noh){if(!list.length)return;if(i<0)i=list.length-1;if(i>=list.length)i=0;initAudio();ctx.resume();
+ if(url)URL.revokeObjectURL(url);if(cur>=0&&!noh)hist.push(cur);cur=i;url=URL.createObjectURL(list[i].blob);
+ A.src=url;A.playbackRate=+$('sp').value;try{await A.play()}catch(e){}meta();render()}
+function next(auto){if(!list.length)return;if(auto&&rep==2){A.currentTime=0;A.play();return}
+ let i;if(shuf&&list.length>1){do{i=Math.random()*list.length|0}while(i==cur)}else{i=cur+1;if(i>=list.length){if(rep==1||!auto)i=0;else{stop();return}}}play(i)}
+function prev(){if(A.currentTime>3){A.currentTime=0;return}hist.length?play(hist.pop(),1):play(cur-1)}
+function stop(){A.pause();A.currentTime=0;$('st').textContent='■'}
+function meta(){const t=list[cur];if(!t)return;const n=clean(t.name),m=n.split(' - ');$('tt').textContent=n+'  ***  ';const s=$('tt');s.className=n.length>16?'sc':'';s.style.animationDuration=(n.length*.3+8)+'s';
+ if('mediaSession' in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:m[1]||n,artist:m[1]?m[0]:'WinMobile'})}
+if('mediaSession' in navigator){const M=navigator.mediaSession;[['play',()=>A.play()],['pause',()=>A.pause()],['previoustrack',prev],['nexttrack',()=>next(0)],['stop',stop],['seekto',e=>A.currentTime=e.seekTime]].forEach(([a,f])=>{try{M.setActionHandler(a,f)}catch(e){}})}
+A.onplay=()=>{$('st').textContent='▶';ctx&&ctx.resume()};A.onpause=()=>{if(A.currentTime)$('st').textContent='❚❚'};A.onended=()=>next(1);
+A.onloadedmetadata=()=>{const k=Math.round(list[cur].blob.size*8/A.duration/1000);$('tech').textContent=k+' kbps  '+Math.round((ctx?ctx.sampleRate:44100)/1000)+' kHz  ESTÉREO'};
+A.ontimeupdate=()=>{$('time').textContent=remain?'-'+fmt(A.duration-A.currentTime):fmt(A.currentTime);if(document.activeElement!==$('seek')&&A.duration)$('seek').value=A.currentTime/A.duration*1000;
+ if('mediaSession' in navigator&&A.duration)try{navigator.mediaSession.setPositionState({duration:A.duration,position:A.currentTime,playbackRate:A.playbackRate})}catch(e){}};
+$('seek').oninput=e=>{if(A.duration)A.currentTime=e.target.value/1000*A.duration};
+$('vol').oninput=e=>{A.volume=+e.target.value;save()};$('bal').oninput=()=>{applyEq();save()};
+$('sp').onchange=()=>{A.playbackRate=+$('sp').value;A.defaultPlaybackRate=A.playbackRate;save()};
+$('sl').onchange=e=>{clearTimeout(sT);const m=+e.target.value;if(m)sT=setTimeout(()=>{A.pause();$('sl').value=0},m*6e4)};
+$('time').onclick=()=>remain^=1;
+
+/* ---- lista ---- */
+async function add(files){for(const f of files){if(!(/^audio\//.test(f.type)||/\.(mp3|m4a|aac|ogg|opus|wav|flac|wma|weba)$/i.test(f.name)))continue;
+ const t={id:Date.now()+Math.random(),name:f.name,blob:f};list.push(t);tx('t','readwrite',s=>s.put(t))}
+ saveOrder();render();if(cur<0&&list.length)play(0)}
+$('f').onchange=e=>{add(e.target.files);e.target.value=''};$('d').onchange=e=>{add([...e.target.files].sort((a,b)=>a.name.localeCompare(b.name)));e.target.value=''};
+document.ondragover=e=>e.preventDefault();document.ondrop=e=>{e.preventDefault();add(e.dataTransfer.files)};
+const keep=fn=>{const id=list[cur]&&list[cur].id;fn();cur=list.findIndex(t=>t.id==id);saveOrder();render()};
+function mv(i,d){const j=i+d;if(j<0||j>=list.length)return;[list[i],list[j]]=[list[j],list[i]];if(cur==i)cur=j;else if(cur==j)cur=i;saveOrder();render()}
+function rm(i){const t=list.splice(i,1)[0];tx('t','readwrite',s=>s.delete(t.id));if(i==cur){stop();cur=-1;A.removeAttribute('src');$('tt').textContent='WinMobile'}else if(i<cur)cur--;saveOrder();render()}
+function render(){const q=$('q').value.toLowerCase(),box=$('pl');box.innerHTML='';
+ list.forEach((t,i)=>{if(q&&!t.name.toLowerCase().includes(q))return;const r=document.createElement('div');r.className='row'+(i==cur?' cur':'');
+  r.innerHTML='<span>'+(i+1)+'.</span><span class="t"></span><span class="a"><button data-a="u">▲</button><button data-a="d">▼</button><button data-a="x">✕</button></span>';
+  r.children[1].textContent=clean(t.name);r.onclick=e=>{const a=e.target.dataset.a;a=='u'?mv(i,-1):a=='d'?mv(i,1):a=='x'?rm(i):play(i)};box.append(r)});
+ $('cnt').textContent='('+list.length+')'}
+$('q').oninput=render;
+
+/* ---- botões ---- */
+const lab=['REPETIR','REPETIR TODAS','REPETIR 1'];
+const K={prev,play:()=>cur<0?play(0):A.play(),pause:()=>A.paused?A.play():A.pause(),stop,next:()=>next(0),open:()=>$('f').click(),addf:()=>$('f').click(),addd:()=>$('d').click(),
+ shuf:()=>{shuf^=1;$('bsh').classList.toggle('on',shuf);save()},rep:()=>{rep=(rep+1)%3;$('brp').textContent=lab[rep];$('brp').classList.toggle('on',rep>0);save()},
+ eq:()=>{$('eqw').classList.toggle('hide');$('beq').classList.toggle('on')},plw:()=>{$('plw').classList.toggle('hide');$('bpl').classList.toggle('on')},
+ eqon:()=>{eqOn^=1;$('beo').textContent=eqOn?'ON':'OFF';applyEq();save()},
+ sort:()=>keep(()=>list.sort((a,b)=>a.name.localeCompare(b.name,0,{numeric:true}))),
+ rnd:()=>keep(()=>{for(let i=list.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[list[i],list[j]]=[list[j],list[i]]}}),
+ clr:()=>{if(confirm('Limpar toda a lista?')){stop();A.removeAttribute('src');list=[];cur=-1;tx('t','readwrite',s=>s.clear());saveOrder();render()}},
+ theme:()=>{const o=['','blue','amber'];document.body.dataset.t=o[(o.indexOf(document.body.dataset.t||'')+1)%3];save()}};
+document.querySelectorAll('[data-k]').forEach(b=>b.onclick=K[b.dataset.k]);
+document.onkeydown=e=>{if(e.target.tagName=='INPUT'&&e.target.type=='text')return;const k=e.key.toLowerCase();
+ if(k=='z')prev();else if(k=='x')K.play();else if(k=='c'||k==' ')K.pause();else if(k=='v')stop();else if(k=='b')next(0);
+ else if(k=='arrowright')A.currentTime+=5;else if(k=='arrowleft')A.currentTime-=5;else if(k=='arrowup')$('vol').value=A.volume=Math.min(1,A.volume+.05);else if(k=='arrowdown')$('vol').value=A.volume=Math.max(0,A.volume-.05);else return;e.preventDefault()};
+
+/* ---- equalizador ---- */
+F.forEach((f,i)=>{const d=document.createElement('div');d.innerHTML='<span>+12</span><input type="range" id="e'+i+'" min="-12" max="12" step="1" value="0"><span>'+(f>=1e3?f/1e3+'k':f)+'</span>';$('eqs').append(d);d.querySelector('input').oninput=()=>{applyEq();save()}});
+$('pr').innerHTML='<option>Preset...</option>'+Object.keys(P).map(k=>'<option>'+k+'</option>').join('');
+$('pr').onchange=e=>{const p=P[e.target.value];if(p){p.forEach((v,i)=>$('e'+i).value=v);applyEq();save()}};$('pre').oninput=()=>{applyEq();save()};
+
+/* ---- visualizador (clique para trocar: barras / osciloscópio / off) ---- */
+const cv=$('vis'),g=cv.getContext('2d'),pk=new Array(19).fill(0);let D;
+$('vis').onclick=()=>{vm=(vm+1)%3};
+(function draw(){requestAnimationFrame(draw);const w=cv.width,h=cv.height;g.clearRect(0,0,w,h);if(!an||vm==2)return;D=D||new Uint8Array(an.frequencyBinCount);
+ const fg=getComputedStyle(document.body).getPropertyValue('--fg'),hi=getComputedStyle(document.body).getPropertyValue('--hi');
+ if(vm==0){an.getByteFrequencyData(D);const n=19,bw=w/n,gr=g.createLinearGradient(0,h,0,0);gr.addColorStop(0,'#0f0');gr.addColorStop(.6,'#ff0');gr.addColorStop(1,'#f30');
+  for(let i=0;i<n;i++){const lo=Math.floor(Math.pow(i/n,2)*110)+1,hi2=Math.floor(Math.pow((i+1)/n,2)*110)+2;let m=0;for(let k=lo;k<hi2;k++)m=Math.max(m,D[k]);
+   const v=m/255*h;pk[i]=Math.max(v,pk[i]-.5);g.fillStyle=gr;g.fillRect(i*bw+1,h-v,bw-2,v);g.fillStyle=hi;g.fillRect(i*bw+1,h-pk[i]-2,bw-2,2)}}
+ else{an.getByteTimeDomainData(D);g.strokeStyle=fg;g.beginPath();for(let i=0;i<w;i++){const y=D[i*2]/255*h;i?g.lineTo(i,y):g.moveTo(i,y)}g.stroke()}})();
+
+/* ---- inicialização ---- */
+(async()=>{
+ if(S.v!=null)$('vol').value=A.volume=S.v;if(S.b)$('bal').value=S.b;if(S.eq)S.eq.forEach((v,i)=>$('e'+i).value=v);if(S.pre)$('pre').value=S.pre;
+ if(S.eqOn===0){eqOn=0;$('beo').textContent='OFF'}if(S.sh){shuf=1;$('bsh').classList.add('on')}if(S.rp){rep=S.rp;$('brp').textContent=lab[rep];$('brp').classList.add('on')}
+ if(S.t)document.body.dataset.t=S.t;if(S.sp){$('sp').value=S.sp;A.defaultPlaybackRate=A.playbackRate=+S.sp}
+ const all=await tx('t','readonly',s=>s.getAll())||[],ord=await tx('m','readonly',s=>s.get('order'))||[],mp=new Map(all.map(t=>[t.id,t]));
+ list=ord.map(id=>mp.get(id)).filter(Boolean);all.forEach(t=>{if(!list.includes(t))list.push(t)});render();
+ if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{})})();
+</script></body></html>
